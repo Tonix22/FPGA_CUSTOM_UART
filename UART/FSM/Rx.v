@@ -12,22 +12,32 @@ reg		[2:0]state;
 parameter HOLD = 0, IDLE = 1, START_BIT = 2, READ_GPIO = 3, STOP_BIT = 4;
 
 // Output depends only on the state
-always @ (state or Bit_in) begin
+always @ (*) begin
 	case (state)
 		START_BIT:
 			begin 
 			cnt   = 4'h0;
 			bussy = 1'b1;
+			out   = 8'h0;
 			end
 		READ_GPIO:
 			begin
-			out[cnt] = Bit_in;
-			cnt = cnt+1;
+			out = out | (Bit_in<<cnt);
+			cnt = cnt+1'b1;
+			bussy = 1'b1;
 			end
-		IDLE:
+		HOLD,IDLE:
+			begin
 			bussy = 1'b0;
-		default:
 			out   = 8'h0;
+			cnt   = 4'b0;
+			end
+		default:
+			begin
+			out   = 8'h0;
+			cnt   = 4'h0;
+			bussy = 1'b1;
+			end
 	endcase
 end
 

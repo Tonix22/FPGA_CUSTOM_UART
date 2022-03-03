@@ -13,7 +13,7 @@ reg [2:0] state;
 parameter HOLD = 0, IDLE = 1, START_BIT = 2, READ_GPIO = 3, STOP_BIT = 4;
 
 // Output depends only on the state
-always @ (state) begin
+always @ (state or data or cnt) begin
 	case (state)
        IDLE:
 			begin
@@ -25,7 +25,7 @@ always @ (state) begin
 			begin 
 			cnt   = 4'h0;
 			bussy = 1'b1;
-         out   = 1'b0;
+         	out   = 1'b0;
 			end
 		READ_GPIO:
 			begin
@@ -35,8 +35,8 @@ always @ (state) begin
             end
         STOP_BIT:
 		  begin
-				cnt   = 4'h0;
-				bussy = 1'b1;
+			cnt   = 4'h0;
+			bussy = 1'b1;
             out   = 1'b1;
 			end
 		default:

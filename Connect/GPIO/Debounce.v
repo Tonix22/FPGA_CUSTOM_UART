@@ -34,6 +34,7 @@ module Debounce(
     my_dff_en d1(src_clk,slow_clk_en,Q0,Q1);
     my_dff_en d2(src_clk,fast_clk,Q1,Q2);
 
+	wire Q1_bar;
     assign Q1_bar = ~Q1;
     initial pb_out = 0;
 
