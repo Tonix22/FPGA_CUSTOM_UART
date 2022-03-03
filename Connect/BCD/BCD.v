@@ -1,15 +1,15 @@
 //signals assigment
 module BCD 
 ( 
-    input W,X,Y,Z,
+    input W,X,Y,Z,en,
     output A,B,C,D,E,F,G
 );
-assign A  = (~W&~X&~Y&Z) | (~W&X&~Y&~Z) | (W&~X&Y&Z) | (W&X&~Y&Z);
-assign B  = (~W&X&~Y&Z) | (X&Y&~Z) | (W&Y&Z) | (W&X&~Z);
-assign C  = (~W&~X&Y&~Z) | (W&X&~Z) | (W&X&Y);
-assign D  = (~X&~Y&Z) | (~W&X&~Y&~Z) | (X&Y&Z) | (W&~X&Y&~Z);
-assign E  = (~W&Z) | (~X&~Y&Z) | (~W&X&~Y);
-assign F  = (~W&~X&Z) | (~W&~X&Y) | (~W&Y&Z) | (W&X&~Y&Z);
-assign G  = (~W&~X&~Y) | (~W&X&Y&Z) | (W&X&~Y&~Z);
+assign A  = (~en) | ((~W&~X&~Y&Z) | (~W&X&~Y&~Z) | (W&~X&Y&Z) | (W&X&~Y&Z));
+assign B  = (~en) | ((~W&X&~Y&Z) | (X&Y&~Z) | (W&Y&Z) | (W&X&~Z));
+assign C  = (~en) | ((~W&~X&Y&~Z) | (W&X&~Z) | (W&X&Y));
+assign D  = (~en) | ((~X&~Y&Z) | (~W&X&~Y&~Z) | (X&Y&Z) | (W&~X&Y&~Z));
+assign E  = (~en) | ((~W&Z) | (~X&~Y&Z) | (~W&X&~Y));
+assign F  = (~en) | ((~W&~X&Z) | (~W&~X&Y) | (~W&Y&Z) | (W&X&~Y&Z));
+assign G  = (~en) | ((~W&~X&~Y) | (~W&X&Y&Z) | (W&X&~Y&~Z));
 
 endmodule
