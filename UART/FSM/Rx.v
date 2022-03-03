@@ -16,12 +16,12 @@ always @ (state or Bit_in) begin
 	case (state)
 		START_BIT:
 			begin 
-			cnt   = 1'h0;
+			cnt   = 4'h0;
 			bussy = 1'b1;
 			end
 		READ_GPIO:
 			begin
-			out = out|(Bit_in<<cnt);
+			out[cnt] = Bit_in;
 			cnt = cnt+1;
 			end
 		IDLE:
@@ -53,6 +53,8 @@ always @ (posedge clk) begin
 					state <= STOP_BIT;
 			STOP_BIT:
 				state <= IDLE;
+			default:
+                state <= HOLD;
 		endcase
 end
 

@@ -1,0 +1,1 @@
+TODO EN RX UART muestrear la señal, en medio del pulso y no al principio. 
