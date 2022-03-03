@@ -1,15 +1,5 @@
 `include "config.v"
-
-`define ID_9600   0
-`define ID_57600  1
-`define ID_115200 2
-
-`define SEL_9600   2'b00
-`define SEL_57600  2'b01
-`define SEL_115200 2'b10
-
-`define MAX_BAUDRATE 115200
-
+`include "common.v"
 
 module Baudrate(
     input src_clk,    
@@ -18,7 +8,7 @@ module Baudrate(
 );
 
 `ifdef DEBUG
-    `define CLK_REF MAX_BAUDRATE*2 // Double of FS max
+    `define CLK_REF `MAX_BAUDRATE*2 // Double of FS max
 `elsif RELEASE
     `define CLK_REF `SOURCE_CLK // Ready for FPGA download
 `endif
