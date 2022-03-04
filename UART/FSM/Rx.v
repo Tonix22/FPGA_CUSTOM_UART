@@ -1,8 +1,13 @@
 module Rx(
-    input	clk, ena, Bit_in, reset,
+    input	src_clk,clk, ena, Bit_in,
 	output reg [7:0] out,
 	output reg bussy
 );
+
+/*Prescaler idea will be used to 
+sample at the middle of the RX pulse
+*/
+
 
 reg [3:0] cnt;
 // Declare state register
@@ -43,7 +48,7 @@ end
 
 // Determine the next state
 always @ (posedge clk) begin
-	if (reset == 1'b1 || ena==1'b1)
+	if (ena==1'b1)
 		state <= HOLD;
 	else
 		case (state)

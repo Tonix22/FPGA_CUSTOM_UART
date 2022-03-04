@@ -1,5 +1,5 @@
 module Tx(
-    input	clk, ena, send,reset,
+    input	clk, ena, send,
     input [7:0] data,
 	output reg out,
 	output reg bussy
@@ -50,7 +50,7 @@ end
 
 // Determine the next state
 always @ (posedge clk) begin
-	if (reset == 1'b1 || ena==1'b1)
+	if (ena==1'b1)
 		state <= HOLD;
 	else
 		case (state)

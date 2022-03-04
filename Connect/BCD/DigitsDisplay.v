@@ -1,14 +1,5 @@
 `include "common.v"
 
-`define BCD_DIM 6
-`define BCD_MAX_IDX `BCD_DIM-1
-
-`define BCD_SEGMENTS 7
-`define OUTPUT_DIM `BCD_DIM*`BCD_SEGMENTS
-
-`define BCD_DISPLAY_LEDS `OUTPUT_DIM-1
-
-
 /***********************************************************
 *
 *  Mode Baudrate -> msg(1:0) : Give the clk select in BCD format
@@ -20,7 +11,6 @@ module DigitsDisplay
 (
     input src_clk,
     input mode,        // Baudrate / Data
-    input data_dir,    // RX TX
     input  [7:0] msg,  // 8 bit
     output [`BCD_DISPLAY_LEDS:0] Display 
 );
@@ -55,10 +45,9 @@ always @(posedge src_clk) begin
     if (mode == `BAUDRATE_MODE) begin
 
         BCD_en [`BCD_MAX_IDX:0] = `BCD_DIM'b1;
-
+        
         case (msg)
             `SEL_9600 : begin
-                        BCD_en = `OUTPUT_DIM'b1;
                         {W[0],X[0],Y[0],Z[0]} = 4'h0;
                         {W[1],X[1],Y[1],Z[1]} = 4'h0;
                         {W[2],X[2],Y[2],Z[2]} = 4'h6;

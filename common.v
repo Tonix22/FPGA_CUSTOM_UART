@@ -14,3 +14,12 @@
 `define SEL_115200 2'b10
 
 `define MAX_BAUDRATE 115200
+
+// BCD
+`define BCD_DIM 6
+`define BCD_MAX_IDX `BCD_DIM-1
+
+`define BCD_SEGMENTS 7
+`define OUTPUT_DIM `BCD_DIM*`BCD_SEGMENTS
+
+`define BCD_DISPLAY_LEDS `OUTPUT_DIM-1
