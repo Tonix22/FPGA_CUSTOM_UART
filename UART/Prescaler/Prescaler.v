@@ -1,4 +1,4 @@
-`include "config.v"
+`include "../../config.v"
 
 module Prescaler#(parameter SRC_CLK=`SOURCE_CLK,parameter DIV=`Output_frequency)(
     input src_clk,en,
