@@ -9,9 +9,9 @@
 `define ID_57600  1
 `define ID_115200 2
 
-`define SEL_9600   2'b00
-`define SEL_57600  2'b01
-`define SEL_115200 2'b10
+`define SEL_9600   8'b00
+`define SEL_57600  8'b01
+`define SEL_115200 8'b10
 
 `define MAX_BAUDRATE 115200
 

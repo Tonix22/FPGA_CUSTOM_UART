@@ -15,7 +15,7 @@ reg [9:0] SW;
 reg DataIn;
 reg SendItem;
 wire DataOut;
-wire [`BCD_DISPLAY_LEDS:0] Display_out;
+wire [`BCD_DISPLAY_LEDS:0] Display;
 
 always #`Test_CLK src_clk=~src_clk;
 
@@ -25,7 +25,7 @@ UART_BCD UART(
     .DataIn(DataIn),  //  RX
     .SendItem(SendItem),// PUSH Button
     .DataOut(DataOut), // TX
-    .Display_out(Display_out)
+    .Display_out(Display)
 );
 
 integer i;
@@ -36,7 +36,7 @@ initial
         SW = 0;
         # 10
 
-        /********* TC1 *********/
+        /********* TC0.TC3,TC4 *********/
         /********* BEGIN *********/
         /*  INPUT : SW0 (zero) 
             OUTPUT: Mux listen SWI and SW2 to  modify (baudrate sel)*/
@@ -48,7 +48,7 @@ initial
 
         /*------- END ----------*/
 
-        /*********TC2, TC3*********/
+        /*********TC2, TC2*********/
         /********* BEGIN *********/
         /*  INPUT : SW0 (one) 
             OUTPUT: SW1 (baudrate sel) hold its value, even if SW1 and SW2 changes.  
