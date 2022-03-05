@@ -6,55 +6,52 @@ module Rx(
 	output reg bussy
 );
 
+initial bussy = 1'b0;
+initial out   = 7'b0;
+
+wire get_bussy = bussy;
+
 reg [3:0] cnt;
 // Declare state register
-reg		[2:0]state;
+reg [2:0]state;
 
 /*Prescaler idea will be used to 
 sample at the middle of the RX pulse
 */
 // sample counter
 reg [7:0] sampler;
+
 reg half_pulse;
+wire get_half_pulse = half_pulse;
+
+reg cnt_toggle;
 initial sampler = 8'b0;
 initial half_pulse = 1'b0;
 
 // Declare states
 parameter IDLE = 0, START_BIT = 1, READ_GPIO = 2, STOP_BIT = 3;
 
-// Output depends only on the state
-always @ (*) begin
-	case (state)
-		START_BIT:
-			begin 
-			cnt   = 4'h0;
-			bussy = 1'b1;
-			out   = 8'h0;
-			end
-		READ_GPIO:
-			begin
-			out = out | (Bit_in<<cnt);
-			cnt = cnt+1'b1;
-			bussy = 1'b1;
-			end
-		IDLE:
-			begin
-			bussy = 1'b0;
-			out   = 8'h0;
-			cnt   = 4'b0;
-			end
-		default:
-			begin
-			out   = 8'h0;
-			cnt   = 4'h0;
-			bussy = 1'b1;
-			end
-	endcase
+
+reg start_sampling;
+reg stop_sampling;
+initial stop_sampling = 1'b0;
+
+/*If we detect the start bit start enable the 8x sampling clk*/
+always @(negedge Bit_in or posedge stop_sampling) begin
+	if(stop_sampling)
+	begin
+		start_sampling <= 1'b0;
+	end
+	else begin
+		if(get_bussy == 1'b0)
+			start_sampling <= 1'b1;
+	end
+
 end
 
-/// sample in the middle of pulse
+/*This sampling will well to keep read in the middle of a pulse*/
 always @(posedge clk) begin
-	if (ena==1'b1) begin
+	if (ena==1'b1 && start_sampling==1'b1) begin
 		if(sampler == 8'd`HALF_PULSE-1'b1)
 			half_pulse = 1'b1;
 		if(sampler == (8'd`HALF_PULSE))
@@ -70,9 +67,10 @@ always @(posedge clk) begin
 end
 
 
-
-// Determine the next state
-always @ (posedge half_pulse) begin
+/* Start state machine when we detect the Bit_in start bit
+   or the halpulse sampling. 
+*/
+always @ (posedge half_pulse or posedge start_sampling) begin
 	case (state)
 		IDLE:
 			if (Bit_in)
@@ -91,6 +89,75 @@ always @ (posedge half_pulse) begin
 		default:
 			state <= IDLE;
 	endcase
+end
+
+/*State machine for RX, read_rutine trigger the reading process
+ reading process depends on get_half_pulse which samples data in 
+ the middle of receving data
+*/
+reg read_rutine;
+
+always @ (state) begin
+	case (state)
+		IDLE:
+			begin
+			bussy <= 1'b0;
+			read_rutine<= 1'b0;
+			end
+		START_BIT:
+			begin 
+			bussy = 1'b1;
+			read_rutine = 1'b1;
+			end
+		READ_GPIO:
+			begin
+			read_rutine<= 1'b1;
+			bussy <= 1'b1;
+			end
+		STOP_BIT:
+			begin
+			read_rutine<= 1'b0;
+			bussy <= 1'b1;
+			end
+		default:
+			begin
+			bussy <= 1'b0;
+			read_rutine<= 1'b0;
+			end
+	endcase
+end
+
+/*Reding bites for each coun in the middle of the pulse*/
+
+always @(posedge get_half_pulse or negedge start_sampling) begin
+
+	if(!start_sampling) begin
+		if(state == IDLE && stop_sampling == 1'b1) 
+		begin
+			stop_sampling =1'b0;
+		end
+	end
+	else begin
+		if(read_rutine) 
+		begin
+			if(cnt == 1'b0) 
+			begin
+				out = 8'b0;
+			end
+			out = out | (Bit_in<<cnt);
+			cnt = cnt+1'b1;
+			stop_sampling =1'b0;
+		end
+		else begin
+			cnt = 4'b0;
+		end
+		if(state == STOP_BIT)
+		begin
+			stop_sampling =1'b1;
+		end
+	end
+
+
 end
 
 endmodule
