@@ -55,13 +55,14 @@ end
 /// sample in the middle of pulse
 always @(posedge clk) begin
 	if (ena==1'b1) begin
-		if(sampler == 8'd`HALF_PULSE)
+		if(sampler == 8'd`HALF_PULSE-1'b1)
 			half_pulse = 1'b1;
-		if(sampler == (8'd`HALF_PULSE+1'b1))
+		if(sampler == (8'd`HALF_PULSE))
 			half_pulse = 1'b0;
-		if(sampler == `SAMPLING_FACTOR) 
+		if(sampler == `SAMPLING_FACTOR-1) 
 			sampler = 8'b0;
-		sampler = sampler +1'b1;
+		else // only incremment if count is not zero
+			sampler = sampler +1'b1;
 	end
 	else begin
 		sampler = 8'b0;

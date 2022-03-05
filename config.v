@@ -6,5 +6,5 @@
 `define MAX_VALUE 9768
 `define Test_CLK 10
 
-//`define RELEASE
-`define DEBUG
+`define RELEASE
+//`define DEBUG

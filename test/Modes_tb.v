@@ -2,12 +2,6 @@
 `timescale 1ns /10ps
 `define Test_CLK 5
 
-`define Test_case_1
-//`define Test_case_2
-//`define Test_case_3
-//`define Test_case_4
-//`define Test_case_5
-
 module Modes_tb();
 
 reg src_clk;
@@ -62,7 +56,7 @@ initial
         #10 SW[2:1] = 2'b01; // set back to 57600
 
         /*------- END ----------*/
-        
+        #30
         
         
         $stop;
