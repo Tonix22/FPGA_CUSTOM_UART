@@ -52,6 +52,15 @@ Baudrate #(.SCALE(`SAMPLING_FACTOR)) PrescalerRX
     .Uart_clk(uart_clk_Rx)
 );
 
+/****************************************
+************** Push Button Debouncer ****
+*****************************************/
+wire sent_TX;
+Debounce debouncer (
+  .pb_1(SendItem), 
+  .src_clk(src_clk), 
+  .pb_out(sent_TX)
+ );
 
 
 /****************************************
@@ -82,7 +91,7 @@ Tx  Transmiter
 (
     .clk(uart_clk_Tx), 
     .ena(en_Tx),
-    .send(SendItem),  //push button
+    .send(sent_TX),  //push button with debounce
     .data(tx_in),     // data to bypass
 	.out(DataOut),   // UART out
 	.bussy(bussy_TX) // bussy flag

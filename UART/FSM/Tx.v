@@ -23,7 +23,7 @@ always @ (posedge clk) begin
 				state <= IDLE;
 			IDLE:
 				begin
-				if (send)
+				if (!send)
 					state <= IDLE;
 				else
 					state <= START_BIT;
