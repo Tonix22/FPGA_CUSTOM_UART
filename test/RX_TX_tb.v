@@ -3,6 +3,7 @@
 
 //`define RECIEVE
 `define RECIEVE_TRANSMIT
+`define GET_SWITCH_INPUTS
 
 `define BAUDRATE_9600
 //`define BAUDRATE_57600
@@ -98,8 +99,14 @@ initial begin
         #`PERIOD;
     end
     `ifdef RECIEVE_TRANSMIT
-    // TX mode get RX outpu
+    // TX mode get RX output
     SW[1] = 1'b1;
+    `ifdef GET_SWITCH_INPUTS
+    SW[2] = 1'b1; // get switch input
+    SW[9:3] = 7'h5A;
+    #3000
+    `endif
+
     #100 SendItem =1'b0;
     for (i=0; i<10; i=i+1) begin
         #`PERIOD;
