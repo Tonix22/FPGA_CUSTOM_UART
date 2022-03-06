@@ -80,6 +80,7 @@ add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutin
 add wave -radix States_TX -label TX_STATES -position end  sim:/RX_TX_tb/UART/Transmiter/state
 add wave -position end sim:/RX_TX_tb/UART/Transmiter/*
 
+add wave -label SELECTORS -position end {SELECTORS {{sim:/RX_TX_tb/SW[2]} {sim:/RX_TX_tb/SW[1]} {sim:/RX_TX_tb/SW[0]}}}
 
 view structure
 view signals
