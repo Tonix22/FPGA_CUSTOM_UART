@@ -134,7 +134,7 @@ always @(posedge get_half_pulse or negedge start_sampling) begin
 	if(!start_sampling) begin
 		if(state == IDLE && stop_sampling == 1'b1) 
 		begin
-			stop_sampling =1'b0;
+			stop_sampling =1'b0; // clear stop bit after end of read
 		end
 	end
 	else begin
@@ -142,18 +142,18 @@ always @(posedge get_half_pulse or negedge start_sampling) begin
 		begin
 			if(cnt == 1'b0) 
 			begin
-				out = 8'b0;
+				out = 8'b0; // clear RX input
 			end
 			out = out | (Bit_in<<cnt);
 			cnt = cnt+1'b1;
-			stop_sampling =1'b0;
+			stop_sampling = 1'b0; // keep sampling
 		end
 		else begin
-			cnt = 4'b0;
+			cnt = 4'b0; // clear bit index when read finishes
 		end
 		if(state == STOP_BIT)
 		begin
-			stop_sampling =1'b1;
+			stop_sampling =1'b1;// stop sampling
 		end
 	end
 
