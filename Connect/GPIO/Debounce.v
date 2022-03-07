@@ -6,53 +6,34 @@ module Debounce(
     input src_clk,pb_1,
     output reg pb_out
 );
-
+    
     wire slow_clk_en;
-    wire Q0,Q1,Q2;
     wire en = 1'b1;
-    Prescaler Prescaler
+    Prescaler #(.SRC_CLK(`CLK_REF),.DIV(9600)) Prescaler_debounce
     (
         .src_clk(src_clk),
         .en(en),
         .clk_div(slow_clk_en)
     );
-
-
-    my_dff_en d0(src_clk,slow_clk_en,pb_1,Q0);
-    my_dff_en d1(src_clk,slow_clk_en,Q0,Q1);
-    my_dff_en d2(src_clk,slow_clk_en,Q1,Q2);
-
-	wire Q1_bar;
-    assign Q1_bar = ~Q1;
-    initial pb_out = 0;
-
-    always @ (posedge src_clk)
-    begin
-        if (Q2 & Q1_bar & !Q0) begin
-            pb_out <= 1;
+    reg [3:0]debouncer_cnt;
+    initial debouncer_cnt =  4'b0000;
+    always @(posedge slow_clk_en) begin
+        if (pb_1 == 1'b0) begin
+            if(debouncer_cnt == 3) begin
+                pb_out = 1'b1;
+            end
+            if(debouncer_cnt  > 6)
+            begin
+                pb_out =1'b0;  
+            end
+            else
+                debouncer_cnt=debouncer_cnt+1;
         end
-        else 
-        begin
-            pb_out <= 0;
-        end
+        else
+            debouncer_cnt = 4'b0000;
     end
-
+    
 endmodule
 
 
-// D-flip-flop with clock enable signal for debouncing module 
-module my_dff_en(
-    input DFF_CLOCK, 
-    input clock_enable,
-    input D, 
-    output reg Q=1
-    );
-    
-    always @ (posedge DFF_CLOCK) 
-    begin
-        if(clock_enable) 
-               Q <= D;
-    end
-
-endmodule 
 
