@@ -16,10 +16,8 @@ wire uart_clk_Tx;
 wire uart_clk_Rx;
 wire DisplayMode = Switches[0]; // (1)
 
-
-
-
 wire bussy_TX;
+
 
 
 /****************************************
@@ -31,6 +29,10 @@ reg stream;
 reg en_Rx;
 reg en_Tx;
 
+
+initial baud_rate_sel = 2'b00;
+initial data_dir = 1'b0;
+initial stream = 1'b0;
 
 
 /****************************************
@@ -55,6 +57,7 @@ Baudrate #(.SCALE(`SAMPLING_FACTOR)) PrescalerRX
 /****************************************
 ************** Push Button Debouncer ****
 *****************************************/
+
 wire sent_TX;
 Debounce debouncer (
   .pb_1(SendItem), 
@@ -87,6 +90,7 @@ wire [7:0] tx_in;
 
 assign tx_in = (stream)?manual_in:out_rx;
 
+
 Tx  Transmiter
 (
     .clk(uart_clk_Tx), 
@@ -110,6 +114,7 @@ Tx  Transmiter
 */
 
 reg [7:0] msg;
+initial msg = 8'b0;
 DigitsDisplay Display
 (
     .src_clk(src_clk),

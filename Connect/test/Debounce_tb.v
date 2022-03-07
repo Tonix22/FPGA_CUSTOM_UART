@@ -1,4 +1,7 @@
-`timescale 1ns / 1ps
+`timescale 10ns /1ns
+`include "../GPIO/Debounce.v"
+`include "../../UART_BCD.v"
+`include "../../common.v"
 
 // testbench verilog code for debouncing button without creating another clock
 module Debounce_tb;
@@ -8,53 +11,78 @@ module Debounce_tb;
  // Outputs
  wire pb_out;
  // Instantiate the debouncing Verilog code
- Debounce uut (
-  .pb_1(pb_1), 
-  .src_clk(src_clk), 
-  .pb_out(pb_out)
- );
+reg [9:0] SW;
+wire DataOut;
+wire [`BCD_DISPLAY_LEDS:0] Display;
+
+UART_BCD UART(
+    .src_clk(src_clk),
+    .Switches(SW),
+    .DataIn(DataIn),  //  RX
+    .SendItem(pb_1),// PUSH Button
+    .DataOut(DataOut), // TX
+    .Display_out(Display)
+);
+
+
+
  initial begin
   src_clk = 0;
-  forever #10 src_clk = ~src_clk;
+  forever #1 src_clk=~src_clk;
  end
  initial begin
-    $dumpfile("test.vcd");
-    $dumpvars(0,uut);
+    //$dumpfile("test.vcd");
+    //$dumpvars(0,uut);
+    repeat(2) begin
     pb_1 = 1;
-    #20;
+    #2000000;
     pb_1=0;
-    #10;
+    #1000000;
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0;
-    #15; 
+    #1500000; 
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0;
-    #20;
+    #2000000;
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0;
-    #15; 
+    #1500000; 
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0; 
-    #500; 
+    
+    #50000000;
+
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0;
-    #10;
+    #1000000;
     pb_1 = 1;
-    #5;
+    #500000;
     pb_1=0;
-    #30; 
+    #3000000; 
     pb_1 = 1;
-    #10;
+    #1000000;
     pb_1=0;
-    #40;
+    #4000000;
     pb_1 = 1;
-    #100
+    #10000000;
+    end
+
     $stop;
- end 
+ end
+
+ initial begin
+   SW = 0;
+   #1000 SW[0] = 1'b1;
+   SW[1] = 1'b1;
+   SW[2] = 1'b1; // get switch input
+   SW[9:3] = 7'h5A;   
+   #1000000000
+   $stop;
+ end
       
 endmodule

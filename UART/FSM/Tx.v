@@ -5,12 +5,31 @@ module Tx(
 	output reg bussy
 );
 
+initial bussy = 1'b0;
+wire get_bussy = bussy;
+
 reg [3:0] cnt;
 // Declare state register
 reg [2:0] state;
 
 // Declare states
 parameter HOLD = 0, IDLE = 1, START_BIT = 2, READ_GPIO = 3, STOP_BIT = 4;
+
+reg idle_move;
+reg clear;
+initial clear = 1'b0;
+initial idle_move = 1'b0;
+
+always @(posedge send or posedge clear) begin
+	if(clear)
+	begin
+		idle_move <= 1'b0;
+	end
+	else begin
+		if(get_bussy == 1'b0)
+			idle_move <= 1'b1;
+	end
+end
 
 
 // Determine the next state
@@ -23,7 +42,7 @@ always @ (posedge clk) begin
 				state <= IDLE;
 			IDLE:
 				begin
-				if (!send)
+				if (!idle_move)
 					state <= IDLE;
 				else
 					state <= START_BIT;
@@ -90,7 +109,7 @@ begin
 		else if (cnt == 4'h8) 
 		begin
 			out   <= 1'b1;
-			first <= 1'b1; 
+			first <= 1'b1;
 		end
 		else 
 		begin
@@ -109,7 +128,15 @@ begin
 
 end 
 	
-
+always @(negedge transmit_rutine or negedge first) begin
+	if(!first)
+		clear = 1'b0;
+	else
+		if(state != HOLD)	
+			clear = 1'b1;
+		else
+			clear = 1'b0;
+end
 
 
 endmodule

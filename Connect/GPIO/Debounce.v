@@ -1,5 +1,5 @@
 
-`include "config.v"
+`include "../../config.v"
 
 
 module Debounce(
@@ -8,31 +8,19 @@ module Debounce(
 );
 
     wire slow_clk_en;
-    wire Q0,Q1,Q2,Q2_bar;
+    wire Q0,Q1,Q2;
     wire en = 1'b1;
-    `ifdef DEBUG
-    Prescaler #(.SRC_CLK(`Test_CLK),.DIV(1)) Prescaler
-    `endif
-    `ifdef RELEASE
     Prescaler Prescaler
-    `endif
     (
         .src_clk(src_clk),
         .en(en),
         .clk_div(slow_clk_en)
     );
 
-    wire fast_clk;
-    Prescaler #(.DIV(`MHZ(25)))ALMOST_SLOW
-    (
-        .src_clk(src_clk),
-        .en(en),
-        .clk_div(fast_clk)
-    );
 
     my_dff_en d0(src_clk,slow_clk_en,pb_1,Q0);
     my_dff_en d1(src_clk,slow_clk_en,Q0,Q1);
-    my_dff_en d2(src_clk,fast_clk,Q1,Q2);
+    my_dff_en d2(src_clk,slow_clk_en,Q1,Q2);
 
 	wire Q1_bar;
     assign Q1_bar = ~Q1;
