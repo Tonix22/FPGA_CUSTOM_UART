@@ -2,3 +2,16 @@
 /db
 /incremental_db
 /output_files
+UART_uc/uart_echo/build
+c5_pin_model_dump.txt
+UART_custom_nativelink_simulation.rpt
+.VSCodeCounter/
+simulation/modelsim/UART_custom_run_msim_rtl_verilog.do.*
+simulation/modelsim/vsim.wlf
+simulation/modelsim/rtl_work/*
+simulation/modelsim/UART_custom.vo
+simulation/modelsim/UART_custom.sft
+simulation/modelsim/UART_custom_modelsim.xrf
+simulation/modelsim/msim_transcript
+test/Modes.wlf
+simulation/modelsim/UART_custom_run_msim_rtl_verilog.do
