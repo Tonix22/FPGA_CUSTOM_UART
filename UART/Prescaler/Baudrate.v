@@ -46,7 +46,11 @@ always @(posedge src_clk) begin
                     Uart_clk = output_clk[`ID_115200];
                     end
 
-        default: en_clk = 3'b000;
+        default: begin
+            en_clk   = 3'b001;
+            Uart_clk = output_clk[`ID_9600];
+        end
+        
     endcase
 end
 
