@@ -60,10 +60,7 @@ set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name EDA_TEST_BENCH_ENABLE_STATUS TEST_BENCH_MODE -section_id eda_simulation
-set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH RT_TX_tb -section_id eda_simulation
-set_global_assignment -name EDA_TEST_BENCH_NAME RT_TX_tb -section_id eda_simulation
-set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id RT_TX_tb
-set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME RT_TX_tb -section_id RT_TX_tb
+set_global_assignment -name EDA_NATIVELINK_SIMULATION_TEST_BENCH Debounce_tb -section_id eda_simulation
 set_global_assignment -name VERILOG_FILE test/RX_TX_tb.v
 set_global_assignment -name VERILOG_FILE test/Prescaler_tb.v
 set_global_assignment -name VERILOG_FILE test/Modes_tb.v
@@ -77,5 +74,76 @@ set_global_assignment -name VERILOG_FILE UART/Prescaler/Baudrate.v
 set_global_assignment -name VERILOG_FILE config.v
 set_global_assignment -name VERILOG_FILE Connect/GPIO/Debounce.v
 set_global_assignment -name VERILOG_FILE UART/Prescaler/Prescaler.v
-set_global_assignment -name EDA_TEST_BENCH_FILE test/RX_TX_tb.v -section_id RT_TX_tb
+
+set_location_assignment PIN_AF14 -to src_clk
+set_location_assignment PIN_Y16 -to SendItem
+
+set_location_assignment PIN_AJ19 -to DataIn
+set_location_assignment PIN_AJ16 -to DataOut
+
+
+set_location_assignment PIN_AB12 -to Switches[0]
+set_location_assignment PIN_AC12 -to Switches[1]
+set_location_assignment PIN_AF9 -to Switches[2]
+set_location_assignment PIN_AF10 -to Switches[3]
+set_location_assignment PIN_AD11 -to Switches[4]
+set_location_assignment PIN_AD12 -to Switches[5]
+set_location_assignment PIN_AE11 -to Switches[6]
+set_location_assignment PIN_AC9 -to Switches[7]
+set_location_assignment PIN_AD10 -to Switches[8]
+set_location_assignment PIN_AE12 -to Switches[9]
+ 
+
+
+set_location_assignment PIN_AE26 -to Display_out[0]
+set_location_assignment PIN_AE27 -to Display_out[6]
+set_location_assignment PIN_AE28 -to Display_out[12]
+set_location_assignment PIN_AG27 -to Display_out[18]
+set_location_assignment PIN_AF28 -to Display_out[24]
+set_location_assignment PIN_AG28 -to Display_out[30]
+set_location_assignment PIN_AH28 -to Display_out[36]
+
+set_location_assignment PIN_AJ29 -to Display_out[1]
+set_location_assignment PIN_AH29 -to Display_out[7]
+set_location_assignment PIN_AH30 -to Display_out[13]
+set_location_assignment PIN_AG30 -to Display_out[19]
+set_location_assignment PIN_AF29 -to Display_out[25]
+set_location_assignment PIN_AF30 -to Display_out[31]
+set_location_assignment PIN_AD27 -to Display_out[37]
+
+set_location_assignment PIN_AB23 -to Display_out[2]
+set_location_assignment PIN_AE29 -to Display_out[8]
+set_location_assignment PIN_AD29 -to Display_out[14]
+set_location_assignment PIN_AC28 -to Display_out[20]
+set_location_assignment PIN_AD30 -to Display_out[26]
+set_location_assignment PIN_AC29 -to Display_out[32]
+set_location_assignment PIN_AC30 -to Display_out[38]
+
+set_location_assignment PIN_AD26 -to Display_out[3]
+set_location_assignment PIN_AC27 -to Display_out[9]
+set_location_assignment PIN_AD25 -to Display_out[15]
+set_location_assignment PIN_AC25 -to Display_out[21]
+set_location_assignment PIN_AB28 -to Display_out[27]
+set_location_assignment PIN_AB25 -to Display_out[33]
+set_location_assignment PIN_AB22 -to Display_out[39]
+
+set_location_assignment PIN_AA24 -to Display_out[4]
+set_location_assignment PIN_Y23 -to Display_out[10]
+set_location_assignment PIN_Y24 -to Display_out[16]
+set_location_assignment PIN_W22 -to Display_out[22]
+set_location_assignment PIN_W24 -to Display_out[28]
+set_location_assignment PIN_V23 -to Display_out[34]
+set_location_assignment PIN_W25 -to Display_out[40]
+
+set_location_assignment PIN_V25 -to Display_out[5]
+set_location_assignment PIN_AA28 -to Display_out[11]
+set_location_assignment PIN_Y27 -to Display_out[17]
+set_location_assignment PIN_AB27 -to Display_out[23]
+set_location_assignment PIN_AB26 -to Display_out[29]
+set_location_assignment PIN_AA26 -to Display_out[35]
+set_location_assignment PIN_AA25 -to Display_out[41]
+set_global_assignment -name EDA_TEST_BENCH_NAME Debounce_tb -section_id eda_simulation
+set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id Debounce_tb
+set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME Debounce_tb -section_id Debounce_tb
+set_global_assignment -name EDA_TEST_BENCH_FILE Connect/test/Debounce_tb.v -section_id Debounce_tb
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
