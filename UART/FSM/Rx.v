@@ -9,8 +9,6 @@ module Rx(
 initial bussy = 1'b0;
 initial out   = 7'b0;
 
-wire get_bussy = bussy;
-
 reg [3:0] cnt;
 initial cnt = 4'b0000;
 // Declare state register

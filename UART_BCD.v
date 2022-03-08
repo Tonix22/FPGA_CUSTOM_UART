@@ -16,9 +16,6 @@ wire uart_clk_Tx;
 wire uart_clk_Rx;
 wire DisplayMode = Switches[0]; // (1)
 
-wire bussy_TX;
-
-
 
 /****************************************
 ************** REGS *********************
@@ -97,8 +94,7 @@ Tx  Transmiter
     .ena(en_Tx),
     .send(sent_TX),  //push button with debounce
     .data(tx_in),     // data to bypass
-	.out(DataOut),   // UART out
-	.bussy(bussy_TX) // bussy flag
+	.out(DataOut)   // UART out
 );
 
 /****************************************
