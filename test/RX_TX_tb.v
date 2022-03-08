@@ -2,8 +2,8 @@
 `timescale 10ns /1ns
 
 `define RECIEVE
-//`define RECIEVE_TRANSMIT
-//`define GET_SWITCH_INPUTS
+`define RECIEVE_TRANSMIT
+`define GET_SWITCH_INPUTS
 
 `define BAUDRATE_9600
 //`define BAUDRATE_57600

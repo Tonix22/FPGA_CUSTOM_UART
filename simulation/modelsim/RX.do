@@ -63,12 +63,14 @@ radix define BCD_States {
 	-defaultcolor black
 }
 
-
+add wave -position end sim:/RX_TX_tb/UART/Reciever/clk
 add wave -label SAMPLE_RX -position end  sim:/RX_TX_tb/UART/Reciever/half_pulse
 add wave -position end sim:/RX_TX_tb/DataIn
 add wave -radix States -label RX_STATES -position end sim:/RX_TX_tb/UART/Reciever/state
 add wave -radix hexadecimal -position end  sim:/RX_TX_tb/UART/Reciever/out
 add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutine
+add wave -position end sim:/RX_TX_tb/UART/Reciever/end_frame
+add wave -color gold -position end sim:/RX_TX_tb/UART/Reciever/cnt
 
 #add wave -radix BCD_States -label BCD0 -position end {BCD0 {sim:/RX_TX_tb/Display[0] sim:/RX_TX_tb/Display[6] sim:/RX_TX_tb/Display[12] sim:/RX_TX_tb/Display[18] sim:/RX_TX_tb/Display[24] sim:/RX_TX_tb/Display[30] sim:/RX_TX_tb/Display[36]}}
 #add wave -radix BCD_States -label BCD1 -position end {BCD1 {sim:/RX_TX_tb/Display[1] sim:/RX_TX_tb/Display[7] sim:/RX_TX_tb/Display[13] sim:/RX_TX_tb/Display[19] sim:/RX_TX_tb/Display[25] sim:/RX_TX_tb/Display[31] sim:/RX_TX_tb/Display[37]}}
@@ -77,7 +79,6 @@ add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutin
 #add wave -radix BCD_States -label BCD4 -position end {BCD4 {sim:/RX_TX_tb/Display[4] sim:/RX_TX_tb/Display[10] sim:/RX_TX_tb/Display[16] sim:/RX_TX_tb/Display[22] sim:/RX_TX_tb/Display[28] sim:/RX_TX_tb/Display[34] sim:/RX_TX_tb/Display[40]}}
 #add wave -radix BCD_States -label BCD5 -position end {BCD5 {sim:/RX_TX_tb/Display[5] sim:/RX_TX_tb/Display[11] sim:/RX_TX_tb/Display[17] sim:/RX_TX_tb/Display[23] sim:/RX_TX_tb/Display[29] sim:/RX_TX_tb/Display[35] sim:/RX_TX_tb/Display[41]}}
 
-add wave -position end sim:/RX_TX_tb/UART/Reciever/*
 
 
 view structure
