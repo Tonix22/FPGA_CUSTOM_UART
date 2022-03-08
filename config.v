@@ -2,7 +2,7 @@
 `define PRESCALE_CNT(ref_clk,freq) (ref_clk/freq)
 
 `define SOURCE_CLK `MHZ(50)
-`define Output_frequency 100//Hz 125 ms
+`define Output_frequency 20//Hz 125 ms
 `define MAX_VALUE 9768
 `define Test_CLK 10
 

@@ -6,10 +6,10 @@ module Tx(
 );
 
 reg transmit;
-initial transmit = 1'b0;
 reg first;
-initial first = 1'b0;
 reg [3:0] cnt;
+initial transmit = 1'b0;
+initial first = 1'b0;
 
 always @(posedge clk) 
 begin

@@ -9,7 +9,7 @@ module Debounce(
     
     wire slow_clk_en;
     wire en = 1'b1;
-    Prescaler #(.SRC_CLK(`CLK_REF),.DIV(9600)) Prescaler_debounce
+    Prescaler #(.SRC_CLK(`SOURCE_CLK),.DIV(115200)) Prescaler_debounce
     (
         .src_clk(src_clk),
         .en(en),
@@ -27,7 +27,7 @@ module Debounce(
                 pb_out =1'b0;  
             end
             else
-                debouncer_cnt=debouncer_cnt+1;
+                debouncer_cnt=debouncer_cnt+1'b1;
         end
         else
             debouncer_cnt = 4'b0000;

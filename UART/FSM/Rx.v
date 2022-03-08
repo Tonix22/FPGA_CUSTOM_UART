@@ -12,6 +12,7 @@ initial out   = 7'b0;
 wire get_bussy = bussy;
 
 reg [3:0] cnt;
+initial cnt = 4'b0000;
 // Declare state register
 reg [2:0]state;
 
@@ -31,27 +32,12 @@ initial half_pulse = 1'b0;
 // Declare states
 parameter IDLE = 0, START_BIT = 1, READ_GPIO = 2, STOP_BIT = 3;
 
-
-reg start_sampling;
-reg stop_sampling;
-initial stop_sampling = 1'b0;
-
-/*If we detect the start bit start enable the 8x sampling clk*/
-always @(negedge Bit_in or posedge stop_sampling) begin
-	if(stop_sampling)
-	begin
-		start_sampling <= 1'b0;
-	end
-	else begin
-		if(get_bussy == 1'b0)
-			start_sampling <= 1'b1;
-	end
-
-end
+reg phase_shift_enable;
+initial phase_shift_enable = 1'b0;
 
 /*This sampling will well to keep read in the middle of a pulse*/
 always @(posedge clk) begin
-	if (ena==1'b1 && start_sampling==1'b1) begin
+	if (phase_shift_enable) begin
 		if(sampler == 8'd`HALF_PULSE-1'b1)
 			half_pulse = 1'b1;
 		if(sampler == (8'd`HALF_PULSE))
@@ -66,11 +52,13 @@ always @(posedge clk) begin
 	end
 end
 
+reg end_frame;
+
 
 /* Start state machine when we detect the Bit_in start bit
    or the halpulse sampling. 
 */
-always @ (posedge half_pulse or posedge start_sampling) begin
+always @ (posedge clk) begin
 	case (state)
 		IDLE:
 			if (Bit_in)
@@ -78,14 +66,20 @@ always @ (posedge half_pulse or posedge start_sampling) begin
 			else
 				state <= START_BIT;
 		START_BIT:
-			state <= READ_GPIO;
+			if(cnt == 1'b0)
+				state <= START_BIT;
+			else
+				state <= READ_GPIO;
 		READ_GPIO:
-			if (cnt < 4'b1000)
+			if (cnt < 4'b1001)
 				state <= READ_GPIO;
 			else
 				state <= STOP_BIT;
 		STOP_BIT:
-			state <= IDLE;
+			if(end_frame == 1'b0)
+				state <= STOP_BIT;
+			else
+				state <= IDLE;
 		default:
 			state <= IDLE;
 	endcase
@@ -103,60 +97,61 @@ always @ (state) begin
 			begin
 			bussy <= 1'b0;
 			read_rutine<= 1'b0;
+			phase_shift_enable<=1'b0;
 			end
 		START_BIT:
 			begin 
 			bussy = 1'b1;
 			read_rutine = 1'b1;
+			phase_shift_enable<=1'b1;
 			end
 		READ_GPIO:
 			begin
 			read_rutine<= 1'b1;
+			phase_shift_enable<=1'b1;
 			bussy <= 1'b1;
 			end
 		STOP_BIT:
 			begin
 			read_rutine<= 1'b0;
+			phase_shift_enable<=1'b1;
 			bussy <= 1'b1;
 			end
 		default:
 			begin
 			bussy <= 1'b0;
 			read_rutine<= 1'b0;
+			phase_shift_enable<=1'b0;
 			end
 	endcase
 end
 
 /*Reding bites for each coun in the middle of the pulse*/
 
-always @(posedge get_half_pulse or negedge start_sampling) begin
+always @(posedge get_half_pulse) begin
 
-	if(!start_sampling) begin
-		if(state == IDLE && stop_sampling == 1'b1) 
+	if(read_rutine) 
+	begin
+		if(cnt == 1'b0) 
 		begin
-			stop_sampling =1'b0; // clear stop bit after end of read
+			out = 8'b0; // clear RX input
 		end
+		if(cnt > 0)
+			out = out | (Bit_in<<(cnt-1));
+		cnt = cnt+1'b1;
+		end_frame = 1'b0;
 	end
 	else begin
-		if(read_rutine) 
-		begin
-			if(cnt == 1'b0) 
-			begin
-				out = 8'b0; // clear RX input
-			end
-			out = out | (Bit_in<<cnt);
-			cnt = cnt+1'b1;
-			stop_sampling = 1'b0; // keep sampling
-		end
-		else begin
-			cnt = 4'b0; // clear bit index when read finishes
-		end
 		if(state == STOP_BIT)
 		begin
-			stop_sampling =1'b1;// stop sampling
+			cnt = 4'b0000;
+			end_frame = 1'b1;
+		end
+		else
+		begin
+			cnt = 4'b0000; // clear bit index when read finishes
 		end
 	end
-
 
 end
 

@@ -16,6 +16,7 @@ vlog -vlog01compat -work work +incdir+/home/tonix/Documents/QuartusCinves/UART_P
 vlog -vlog01compat -work work +incdir+/home/tonix/Documents/QuartusCinves/UART_PROJECT/UART/Prescaler {/home/tonix/Documents/QuartusCinves/UART_PROJECT/UART/Prescaler/Prescaler.v}
 
 vlog -vlog01compat -work work +incdir+/home/tonix/Documents/QuartusCinves/UART_PROJECT/test {/home/tonix/Documents/QuartusCinves/UART_PROJECT/test/RX_TX_tb.v}
+vlog -vlog01compat -work work +incdir+/home/tonix/Documents/QuartusCinves/UART_PROJECT/Connect/GPIO {/home/tonix/Documents/QuartusCinves/UART_PROJECT/Connect/GPIO/Debounce.v}
 
 vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L cyclonev_ver -L cyclonev_hssi_ver -L cyclonev_pcie_hip_ver -L rtl_work -L work -voptargs="+acc"  RX_TX_tb
 
@@ -62,8 +63,7 @@ radix define BCD_States {
 	-defaultcolor black
 }
 
-#add wave -label SELECTORS -position end {SELECTORS {{sim:/RX_TX_tb/SW[2]} {sim:/RX_TX_tb/SW[1]} {sim:/RX_TX_tb/SW[0]}}}
-#add wave -label SAMPLE_CNT -radix unsigned -position end sim:/RX_TX_tb/UART/Reciever/sampler
+
 add wave -label SAMPLE_RX -position end  sim:/RX_TX_tb/UART/Reciever/half_pulse
 add wave -position end sim:/RX_TX_tb/DataIn
 add wave -radix States -label RX_STATES -position end sim:/RX_TX_tb/UART/Reciever/state
@@ -77,10 +77,8 @@ add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutin
 #add wave -radix BCD_States -label BCD4 -position end {BCD4 {sim:/RX_TX_tb/Display[4] sim:/RX_TX_tb/Display[10] sim:/RX_TX_tb/Display[16] sim:/RX_TX_tb/Display[22] sim:/RX_TX_tb/Display[28] sim:/RX_TX_tb/Display[34] sim:/RX_TX_tb/Display[40]}}
 #add wave -radix BCD_States -label BCD5 -position end {BCD5 {sim:/RX_TX_tb/Display[5] sim:/RX_TX_tb/Display[11] sim:/RX_TX_tb/Display[17] sim:/RX_TX_tb/Display[23] sim:/RX_TX_tb/Display[29] sim:/RX_TX_tb/Display[35] sim:/RX_TX_tb/Display[41]}}
 
-add wave -radix States_TX -label TX_STATES -position end  sim:/RX_TX_tb/UART/Transmiter/state
-add wave -position end sim:/RX_TX_tb/UART/Transmiter/*
+add wave -position end sim:/RX_TX_tb/UART/Reciever/*
 
-add wave -label SELECTORS -position end {SELECTORS {{sim:/RX_TX_tb/SW[2]} {sim:/RX_TX_tb/SW[1]} {sim:/RX_TX_tb/SW[0]}}}
 
 view structure
 view signals
