@@ -18,7 +18,7 @@ always @(posedge src_clk) begin
             clk_div=1;
         end
 
-        if(cnt == MAX_CNT/2) begin 
+        if(cnt == 1) begin 
             clk_div = 0;
         end
     end

@@ -35,18 +35,23 @@ initial phase_shift_enable = 1'b0;
 
 /*This sampling will well to keep read in the middle of a pulse*/
 always @(posedge clk) begin
-	if (phase_shift_enable) begin
-		if(sampler == 8'd`HALF_PULSE-1'b1)
-			half_pulse = 1'b1;
-		if(sampler == (8'd`HALF_PULSE))
-			half_pulse = 1'b0;
-		if(sampler == `SAMPLING_FACTOR-1) 
+	if(ena) 
+	begin
+		if (phase_shift_enable) 
+		begin
+			if(sampler == 8'd`HALF_PULSE-1'b1)
+				half_pulse = 1'b1;
+			if(sampler == (8'd`HALF_PULSE))
+				half_pulse = 1'b0;
+			if(sampler == `SAMPLING_FACTOR-1) 
+				sampler = 8'b0;
+			else // only incremment if count is not zero
+				sampler = sampler +1'b1;
+		end
+		else 
+		begin
 			sampler = 8'b0;
-		else // only incremment if count is not zero
-			sampler = sampler +1'b1;
-	end
-	else begin
-		sampler = 8'b0;
+		end
 	end
 end
 
@@ -57,30 +62,33 @@ reg end_frame;
    or the halpulse sampling. 
 */
 always @ (posedge clk) begin
-	case (state)
-		IDLE:
-			if (Bit_in)
+	if(ena) 
+	begin
+		case (state)
+			IDLE:
+				if (Bit_in)
+					state <= IDLE;
+				else
+					state <= START_BIT;
+			START_BIT:
+				if(cnt == 1'b0)
+					state <= START_BIT;
+				else
+					state <= READ_GPIO;
+			READ_GPIO:
+				if (cnt < 4'b1001)
+					state <= READ_GPIO;
+				else
+					state <= STOP_BIT;
+			STOP_BIT:
+				if(end_frame == 1'b0)
+					state <= STOP_BIT;
+				else
+					state <= IDLE;
+			default:
 				state <= IDLE;
-			else
-				state <= START_BIT;
-		START_BIT:
-			if(cnt == 1'b0)
-				state <= START_BIT;
-			else
-				state <= READ_GPIO;
-		READ_GPIO:
-			if (cnt < 4'b1001)
-				state <= READ_GPIO;
-			else
-				state <= STOP_BIT;
-		STOP_BIT:
-			if(end_frame == 1'b0)
-				state <= STOP_BIT;
-			else
-				state <= IDLE;
-		default:
-			state <= IDLE;
-	endcase
+		endcase
+	end
 end
 
 /*State machine for RX, read_rutine trigger the reading process
@@ -126,30 +134,35 @@ end
 
 /*Reding bites for each coun in the middle of the pulse*/
 
-always @(posedge get_half_pulse) begin
+always @(posedge clk) begin
 
-	if(read_rutine) 
-	begin
-		if(cnt == 1'b0) 
-		begin
-			out = 8'b0; // clear RX input
+	if(ena) begin
+		if(get_half_pulse) begin 
+			if(read_rutine) 
+			begin
+				if(cnt == 1'b0) 
+				begin
+					out = 8'b0; // clear RX input
+				end
+				if(cnt > 0)
+					out = out | (Bit_in<<(cnt-1));
+				cnt = cnt+1'b1;
+				end_frame = 1'b0;
+			end
+			else begin
+				if(state == STOP_BIT)
+				begin
+					cnt = 4'b0000;
+					end_frame = 1'b1;
+				end
+				else
+				begin
+					cnt = 4'b0000; // clear bit index when read finishes
+				end
+			end
 		end
-		if(cnt > 0)
-			out = out | (Bit_in<<(cnt-1));
-		cnt = cnt+1'b1;
-		end_frame = 1'b0;
 	end
-	else begin
-		if(state == STOP_BIT)
-		begin
-			cnt = 4'b0000;
-			end_frame = 1'b1;
-		end
-		else
-		begin
-			cnt = 4'b0000; // clear bit index when read finishes
-		end
-	end
+
 
 end
 

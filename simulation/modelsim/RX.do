@@ -65,10 +65,11 @@ radix define BCD_States {
 
 add wave -position end sim:/RX_TX_tb/UART/Reciever/clk
 add wave -label SAMPLE_RX -position end  sim:/RX_TX_tb/UART/Reciever/half_pulse
+add wave -position end sim:/RX_TX_tb/UART/Reciever/ena
+add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutine
 add wave -position end sim:/RX_TX_tb/DataIn
 add wave -radix States -label RX_STATES -position end sim:/RX_TX_tb/UART/Reciever/state
 add wave -radix hexadecimal -position end  sim:/RX_TX_tb/UART/Reciever/out
-add wave -label READRUNTIME -position end sim:/RX_TX_tb/UART/Reciever/read_rutine
 add wave -position end sim:/RX_TX_tb/UART/Reciever/end_frame
 add wave -color gold -position end sim:/RX_TX_tb/UART/Reciever/cnt
 

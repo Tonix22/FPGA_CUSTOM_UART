@@ -68,10 +68,13 @@ Debounce debouncer (
 *****************************************/
 wire [7:0] out_rx;
 wire bussy_RX;
+wire RX_baudrate;
+assign RX_baudrate = en_Rx & uart_clk_Rx;
+
 Rx Reciever
 (
-    .clk(uart_clk_Rx),
-    .ena(en_Rx), 
+    .clk(src_clk),
+    .ena(RX_baudrate), 
     .Bit_in(DataIn), // bit de entrada
     .out(out_rx),    // Recived byte
 	.bussy(bussy_RX)
@@ -87,11 +90,12 @@ wire [7:0] tx_in;
 
 assign tx_in = (stream)?manual_in:out_rx;
 
-
+wire Tx_baudrate;
+assign Tx_baudrate = en_Tx & uart_clk_Tx;
 Tx  Transmiter
 (
-    .clk(uart_clk_Tx), 
-    .ena(en_Tx),
+    .clk(src_clk), 
+    .ena(Tx_baudrate),
     .send(sent_TX),  //push button with debounce
     .data(tx_in),     // data to bypass
 	.out(DataOut)   // UART out

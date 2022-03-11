@@ -16,7 +16,7 @@
 `define MAX_BAUDRATE 115200
 
 `define SAMPLING_FACTOR 7
-`define HALF_PULSE 3
+`define HALF_PULSE 2
 
 // BCD
 `define BCD_DIM 6
